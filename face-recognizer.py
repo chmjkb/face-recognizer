@@ -1,4 +1,3 @@
-from re import L
 import cv2 as cv
 import numpy as np
 import os
@@ -13,10 +12,25 @@ def captureVid():
         cv.imshow('frame', frame)
 
         if cv.waitKey(1) & 0xFF == ord('q'):  # Press 'q' to quit
-            break
+            break  
         
     vid.release()
     cv.destroyAllWindows()
+    
+people = [ f.path.lstrip('\\Faces') for f in os.scandir('Faces') if f.is_dir() ]
+faces_dir = os.getcwd() + '\\Faces'
 
-def getImages():
-    pass
+
+def trainModel(DIR, people):
+    for person in people:
+        path = os.path.join(DIR, person)
+        label = people.index(person)
+
+        for img in os.listdir(path):
+            img_path = os.path.join(path, img)
+
+    
+    
+
+
+
