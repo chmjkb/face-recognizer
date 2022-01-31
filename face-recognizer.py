@@ -3,26 +3,14 @@ import numpy as np
 import os
 
 
-def captureVid():
-    """Function responsible for capturing the webcam"""
-    while True:  # Reads the video frame by frame
-        vid = cv.VideoCapture(0)
-
-        ret, frame = vid.read()
-        cv.imshow('frame', frame)
-
-        if cv.waitKey(1) & 0xFF == ord('q'):  # Press 'q' to quit
-            break
-
-
 haar_cascade = cv.CascadeClassifier('haar_cascades.xml')
 people = []
 DIR = os.path.join(os.getcwd(), 'faces')  # Faces dir location
-for person in os.listdir(DIR)[1:]:  # Iterating through faces dir to get people
+for person in os.listdir(DIR):  # Iterating through faces dir to get people
     people.append(person)
 
 features = []
-labels =[]
+labels = []
 
 
 def create_training():
@@ -34,12 +22,31 @@ def create_training():
         for img in os.listdir(path):
             img_path = os.path.join(path, img)
             img_array = cv.imread(img_path)
+            if img_array is None:
+                continue
+
             gray = cv.cvtColor(img_array, cv.COLOR_BGR2GRAY)
 
             faces_rect = haar_cascade.detectMultiScale(gray, scaleFactor=1.1, minNeighbors=4)
             for (x, y, w, h) in faces_rect:
-                faces_roi = faces_rect[y:y+h, x:x+w]
+                faces_roi = gray[y:y+h, x:x+w]
                 features.append(faces_roi)
                 labels.append(label)
+
+
+create_training()
+features = np.array(features, dtype='object')
+labels = np.array(labels)
+
+face_recognizer = cv.face.LBPHFaceRecognizer_create()
+
+# Training the recognizer
+face_recognizer.train(features, labels)
+
+face_recognizer.save('faces_trained.yml')
+np.save('features.npy', features)
+np.save('labels.npy', labels)
+
+
 
 
