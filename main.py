@@ -16,7 +16,7 @@ for person in os.listdir(DIR):  # Iterating through faces dir to get people
     people.append(person)
 
 
-def capture_vid():
+def capture_vid(user_confidence):
     """Function responsible for capturing the webcam"""
 
     vid = cv.VideoCapture(0)
@@ -33,16 +33,24 @@ def capture_vid():
             label, confidence = face_recognizer.predict(faces_roi)  # Recognizing a face
             print(f"Label = {label}, confidence = {confidence}")
             
-            if confidence > 99:
-                cv.putText(frame, str(people[label]), (20,20), cv.FONT_HERSHEY_COMPLEX, 1.0, (0,255,0), 2)
-                cv.rectangle(frame, (x,y), (x+w, y+h), (0,255,0), 2)
+            if confidence > user_confidence:
+                cv.putText(frame, str(people[label]), (x+20, y+20), cv.FONT_HERSHEY_COMPLEX, 1.0, (0, 255, 0), 2)
+                cv.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 0), 2)
             else:
-                cv.putText(frame, 'unknown', (20,20), cv.FONT_HERSHEY_COMPLEX, 1.0, (0,255,0), 2)
-                cv.rectangle(frame, (x,y), (x+w, y+h), (255, 0, 0), 2)
+                cv.putText(frame, 'unknown', (x+20, y+20), cv.FONT_HERSHEY_COMPLEX, 1.0, (0, 255, 0), 2)
+                cv.rectangle(frame, (x, y), (x+w, y+h), (255, 0, 0), 2)
             
         cv.imshow('frame', frame)
 
         if cv.waitKey(1) & 0xFF == ord('q'):  # Press 'q' to quit
             break
 
-capture_vid()
+
+while True:
+    try:
+        user_confidence = int(input("Select confidence:"))
+        break
+    except ValueError:
+        print("Enter a number!")
+
+capture_vid(user_confidence)
