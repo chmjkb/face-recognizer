@@ -13,7 +13,8 @@ face_recognizer.read('faces_trained.yml')
 people = []
 DIR = os.path.join(os.getcwd(), 'faces')  # Faces dir location
 for person in os.listdir(DIR):  # Iterating through faces dir to get people
-    people.append(person)
+    if not person.startswith('.'):  # Prevents from adding hidden files to the people list
+        people.append(person)
 
 
 def capture_vid(user_confidence):

@@ -7,7 +7,8 @@ haar_cascade = cv.CascadeClassifier('haar_cascades.xml')
 people = []
 DIR = os.path.join(os.getcwd(), 'faces')  # Faces dir location
 for person in os.listdir(DIR):  # Iterating through faces dir to get people
-    people.append(person)
+    if not person.startswith('.'):  # Prevents adding the hidden files to the people list
+        people.append(person)
 
 features = []
 labels = []
@@ -35,6 +36,7 @@ def create_training():
 
 
 create_training()
+print(labels)
 features = np.array(features, dtype='object')
 labels = np.array(labels)
 
@@ -46,7 +48,3 @@ face_recognizer.train(features, labels)
 face_recognizer.save('faces_trained.yml')
 np.save('features.npy', features)
 np.save('labels.npy', labels)
-
-
-
-
