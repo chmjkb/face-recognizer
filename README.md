@@ -1,3 +1,2 @@
 # face-recognizer
-To make it work, you need to install openCV, pandas
-To add the faces to train, go to the faces folder and create a folder with images for each person you want to recognize.
+I am currently trying to make the model more accurate and experimenting with various datasets, However we can see some form of face detection at this point 
