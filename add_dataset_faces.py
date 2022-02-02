@@ -1,21 +1,31 @@
-"""import cv2 as cv
+import cv2 as cv
 import os
 import time
 
+cam  = cv.VideoCapture(0)
+
 
 def save_pics(faces_dir, amount_of_pics, name):
+    img_counter = 0
+
     while True:
-        vid = cv.VideoCapture(0)
-        ret, frame = vid.read()
-        gray_frame = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
+        ret, frame = cam.read()
+        if not ret:
+            print('failed to grab a frame')
+            break
+        cv.imshow("test", frame)
 
-        for counter in range(amount_of_pics):
-            pic_path = os.path.join(os.path.join(faces_dir, name), str(counter) + '.jpg')
-            cv.imwrite(pic_path, gray_frame)
+        k = cv.waitKey(1)
+        if k%256 == 27:
+            # ESC pressed
+            print("Escape was hit... closing")
+            break
+        elif k%256 == 32:
+            # SPACE pressed
+            img_name = f"opencv_frame_{img_counter}"
+            cv.imwrite(img_name, frame)
+            print(f"{img_name} written")
+            img_counter += 1
 
+cam.release()
 
-#name = input('')
-DIR = os.path.join(os.getcwd(), 'faces')  # Faces dir location
-save_pics(DIR, 10, 'Kacper Kaczmarczyk')
-
-"""
