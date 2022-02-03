@@ -2,6 +2,7 @@ import numpy as np
 import cv2 as cv
 import os
 from add_dataset_faces import save_pics
+from face_recognizer import get_people_dir
 
 haar_cascade = cv.CascadeClassifier('haar_cascades.xml')
 features = np.load('features.npy', allow_pickle=True)
@@ -10,18 +11,11 @@ labels = np.load('labels.npy', allow_pickle=True)
 face_recognizer = cv.face.LBPHFaceRecognizer_create()
 face_recognizer.read('faces_trained.yml')
 
-people = []
-DIR = os.path.join(os.getcwd(), 'faces')  # Faces dir location
-for person in os.listdir(DIR):  # Iterating through faces dir to get people
-    if not person.startswith('.'):  # Prevents from adding hidden files to the people list
-        people.append(person)
-
 
 def capture_vid(user_confidence):
     """Function responsible for capturing the webcam"""
-
+    DIR = os.path.join(os.getcwd(), 'faces')  # Faces dir location
     vid = cv.VideoCapture(0)
-    img_counter = 0
     while True:  # Reads the video frame by frame
 
         ret, frame = vid.read()
@@ -35,13 +29,13 @@ def capture_vid(user_confidence):
             )  # Detecting a face
 
         k = cv.waitKey(1)
-
         if k % 256 == 32:
             save_pics(DIR, frame)
 
         if k & 0xFF == ord('q'):  # Press 'q' to quit
             break
 
+        people = get_people_dir(DIR)
         for (x, y, w, h) in faces_rect:
             faces_roi = gray_frame[y:y+h, x:x+h]
             label, confidence = face_recognizer.predict(faces_roi)  # Recognizing a face
@@ -55,8 +49,6 @@ def capture_vid(user_confidence):
                 cv.rectangle(frame, (x, y), (x+w, y+h), (255, 0, 0), 2)
             
         cv.imshow('frame', frame)
-
-
 
 
 while True:

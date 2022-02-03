@@ -4,18 +4,23 @@ import os
 
 
 haar_cascade = cv.CascadeClassifier('haar_cascades.xml')
-people = []
-DIR = os.path.join(os.getcwd(), 'faces')  # Faces dir location
-for person in os.listdir(DIR):  # Iterating through faces dir to get people
-    if not person.startswith('.'):  # Prevents adding the hidden files to the people list
-        people.append(person)
-
 features = []
 labels = []
 
 
+def get_people_dir(DIR):
+    people = []
+    for person in os.listdir(DIR):  # Iterating through faces dir to get people
+        if not person.startswith('.'):  # Prevents adding the hidden files to the people list
+            people.append(person)
+
+    return people
+
+
 def create_training():
     """Grabbing every image in each folder and adding it to a training set"""
+    DIR = os.path.join(os.getcwd(), 'faces')  # Faces dir location
+    people = get_people_dir(DIR)
     for person in people:
         path = os.path.join(DIR, person)
         label = people.index(person)  # Gets the label of every single person in the faces dir
@@ -28,7 +33,12 @@ def create_training():
 
             gray = cv.cvtColor(img_array, cv.COLOR_BGR2GRAY)
 
-            faces_rect = haar_cascade.detectMultiScale(gray, scaleFactor=1.1, minNeighbors=4)
+            faces_rect = haar_cascade.detectMultiScale(
+                gray,
+                scaleFactor=1.2,
+                minNeighbors=5,
+                minSize=(20, 20)
+            )
             for (x, y, w, h) in faces_rect:
                 faces_roi = gray[y:y+h, x:x+w]
                 features.append(faces_roi)
