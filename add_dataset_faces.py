@@ -1,31 +1,16 @@
 import cv2 as cv
 import os
-import time
-
-cam  = cv.VideoCapture(0)
+from datetime import datetime
 
 
-def save_pics(faces_dir, amount_of_pics, name):
-    img_counter = 0
+def save_pics(faces_dir, frame):
+    """Function responsible for saving the picture once spacebar is pressed"""
 
-    while True:
-        ret, frame = cam.read()
-        if not ret:
-            print('failed to grab a frame')
-            break
-        cv.imshow("test", frame)
+    name = input('What is your name?')  # We need that to define where to save the picture
+    img_name = f"{datetime.now()}.jpg"
+    path = os.path.join(faces_dir, name)
 
-        k = cv.waitKey(1)
-        if k%256 == 27:
-            # ESC pressed
-            print("Escape was hit... closing")
-            break
-        elif k%256 == 32:
-            # SPACE pressed
-            img_name = f"opencv_frame_{img_counter}"
-            cv.imwrite(img_name, frame)
-            print(f"{img_name} written")
-            img_counter += 1
+    cv.imwrite(os.path.join(path, img_name), frame)
 
-cam.release()
+
 
