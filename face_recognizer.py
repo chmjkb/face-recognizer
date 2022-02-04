@@ -3,12 +3,6 @@ import numpy as np
 import os
 
 
-haar_cascade = cv.CascadeClassifier('haar_cascades.xml')
-
-features = []
-labels = []
-
-
 def get_people_dir(DIR):
     people = []
     for person in os.listdir(DIR):  # Iterating through faces dir to get people
@@ -18,10 +12,12 @@ def get_people_dir(DIR):
     return people
 
 
-def face_recognition_training():
+def get_features_labels(DIR, people):
     """Grabbing every image in each folder and adding it to a training set"""
-    DIR = os.path.join(os.getcwd(), 'faces')  # Faces dir location
-    people = get_people_dir(DIR)
+    haar_cascade = cv.CascadeClassifier('haar_cascades.xml')
+
+    features = []
+    labels = []
 
     for person in people:
         path = os.path.join(DIR, person)
@@ -45,23 +41,23 @@ def face_recognition_training():
                 faces_roi = gray[y:y+h, x:x+w]
                 features.append(faces_roi)
                 labels.append(label)
+    return features, labels
+
+
+def train_model(features, labels):
+    """Training the model and saving them to yml file"""
+    features = np.array(features)
+    labels = np.array(labels)
+
+    face_recognizer = cv.face.LBPHFaceRecognizer_create()
+    face_recognizer.train(features, labels)
+
+    face_recognizer.save('faces_trained.yml')
+    np.save('features.npy', features)
+    np.save('labels.npy', labels)
 
 
 def facemask_training():
-    """Facemask detection training"""
+    """Face mask detection training"""
     pass
 
-
-face_recognition_training()
-print(labels)
-features = np.array(features, dtype='object')
-labels = np.array(labels)
-
-face_recognizer = cv.face.LBPHFaceRecognizer_create()
-
-# Training the recognizer
-face_recognizer.train(features, labels)
-
-face_recognizer.save('faces_trained.yml')
-np.save('features.npy', features)
-np.save('labels.npy', labels)

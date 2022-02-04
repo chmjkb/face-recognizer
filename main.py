@@ -44,7 +44,8 @@ def capture_vid(user_confidence):
             #print(f"Label = {label}, confidence = {confidence}")
 
             if confidence > user_confidence:
-                cv.putText(frame, str(people[label]), (x+20, y+20), cv.FONT_HERSHEY_COMPLEX, 1.0, (0, 255, 0), 1)
+                detected_person = str(people[label].replace('-', " ").title())
+                cv.putText(frame, detected_person, (x+20, y+20), cv.FONT_HERSHEY_COMPLEX, 1.0, (0, 255, 0), 1)
                 cv.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 0), 2)
             else:
                 cv.putText(frame, 'unknown', (x+20, y+20), cv.FONT_HERSHEY_COMPLEX, 1.0, (0, 255, 0), 2)
