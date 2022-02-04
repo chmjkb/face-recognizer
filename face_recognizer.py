@@ -4,6 +4,7 @@ import os
 
 
 def get_people_dir(DIR):
+    """Gets the path to the 'people' directory"""
     people = []
     for person in os.listdir(DIR):  # Iterating through faces dir to get people
         if not person.startswith('.'):  # Prevents adding the hidden files to the people list
