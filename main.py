@@ -21,6 +21,8 @@ def capture_vid(user_confidence):
         ret, frame = vid.read()
         gray_frame = cv.cvtColor(frame, cv.COLOR_BGR2GRAY)
 
+        cv.putText(frame, "Press spacebar to take a photo", (20, 20), cv.FONT_HERSHEY_PLAIN, 1.0, (0, 0, 255), 2)
+
         faces_rect = haar_cascade.detectMultiScale(
             gray_frame,
             scaleFactor=1.2,
@@ -39,10 +41,10 @@ def capture_vid(user_confidence):
         for (x, y, w, h) in faces_rect:
             faces_roi = gray_frame[y:y+h, x:x+h]
             label, confidence = face_recognizer.predict(faces_roi)  # Recognizing a face
-            print(f"Label = {label}, confidence = {confidence}")
+            #print(f"Label = {label}, confidence = {confidence}")
 
             if confidence > user_confidence:
-                cv.putText(frame, str(people[label]), (x+20, y+20), cv.FONT_HERSHEY_COMPLEX, 1.0, (0, 255, 0), 2)
+                cv.putText(frame, str(people[label]), (x+20, y+20), cv.FONT_HERSHEY_COMPLEX, 1.0, (0, 255, 0), 1)
                 cv.rectangle(frame, (x, y), (x+w, y+h), (0, 255, 0), 2)
             else:
                 cv.putText(frame, 'unknown', (x+20, y+20), cv.FONT_HERSHEY_COMPLEX, 1.0, (0, 255, 0), 2)
