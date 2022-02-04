@@ -4,6 +4,7 @@ import os
 
 
 haar_cascade = cv.CascadeClassifier('haar_cascades.xml')
+
 features = []
 labels = []
 
@@ -17,10 +18,11 @@ def get_people_dir(DIR):
     return people
 
 
-def create_training():
+def face_recognition_training():
     """Grabbing every image in each folder and adding it to a training set"""
     DIR = os.path.join(os.getcwd(), 'faces')  # Faces dir location
     people = get_people_dir(DIR)
+
     for person in people:
         path = os.path.join(DIR, person)
         label = people.index(person)  # Gets the label of every single person in the faces dir
@@ -45,7 +47,12 @@ def create_training():
                 labels.append(label)
 
 
-create_training()
+def facemask_training():
+    """Facemask detection training"""
+    pass
+
+
+face_recognition_training()
 print(labels)
 features = np.array(features, dtype='object')
 labels = np.array(labels)
