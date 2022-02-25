@@ -24,7 +24,7 @@ python3 main.py
 ```
  
 ### quirks:
-_If you want to take a picture of yourself, and place it in your dataset, just press space. The script will then prompt you for your name, and save the picture to your directory._
+_If you want to take a picture of yourself, and save it in your dataset, just press space. The script will then prompt you for your name, and save the picture to your directory._
 ### future ideas:
 _I want to make the model able to tell if the person in front of the camera is wearing a facemask or not_
 
